@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Travel Planner – System Architecture Diagram</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #020617;
+      --card-alt: #020617;
+      --border: #1e293b;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.12);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --arrow: #64748b;
+      --tool: #0b1120;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 24px;
+      letter-spacing: 0.03em;
+    }
+
+    .diagram {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .lane {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .box {
+      min-width: 140px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, #1f2937, var(--card));
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.3;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .box.small {
+      min-width: 110px;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .box.highlight {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft),
+        0 10px 30px rgba(34, 197, 94, 0.3);
+    }
+
+    .box-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .box-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .arrow {
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--arrow), transparent);
+      position: relative;
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: -3px;
+      border-width: 4px 0 4px 6px;
+      border-style: solid;
+      border-color: transparent transparent transparent var(--arrow);
+    }
+
+    .section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-align: left;
+      margin: 8px 0 0 4px;
+    }
+
+    .tools-row {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .tool-box {
+      background: radial-gradient(circle at top left, #020617, var(--tool));
+    }
+
+    .vertical-gap {
+      height: 8px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .vertical-arrow {
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(180deg, var(--arrow), transparent);
+      position: relative;
+    }
+
+    .vertical-arrow::after {
+      content: "";
+      position: absolute;
+      left: -3px;
+      bottom: -2px;
+      border-width: 6px 4px 0 4px;
+      border-style: solid;
+      border-color: var(--arrow) transparent transparent transparent;
+    }
+
+    .cluster {
+      border-radius: 14px;
+      border: 1px dashed #1f2937;
+      padding: 10px 14px 14px;
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .cluster-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .arrow {
+        width: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Travel Planner – System Architecture & Flow</h1>
+
+  <div class="diagram">
+    <!-- LANE 1: User → UI → Backend -->
+    <div class="section-label">Request Flow</div>
+    <div class="lane">
+      <div class="box">
+        <div class="box-title">User</div>
+        <div class="box-sub">Browser / Mobile</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="box">
+        <div class="box-title">Streamlit UI</div>
+        <div class="box-sub">Chat + Itinerary + Routes</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="box">
+        <div class="box-title">FastAPI Backend</div>
+        <div class="box-sub">/chat, /generate_itinerary, /routes</div>
+      </div>
+    </div>
+
+    <!-- LANE 2: Session / Memory / Guardrail / Agent / LLM -->
+    <div class="section-label">Orchestration & Memory</div>
+    <div class="lane">
+      <div class="box small">
+        <div class="box-title">Session Handler</div>
+        <div class="box-sub">ChatRequest parsing</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="box small">
+        <div class="box-title">Memory (SQLite)</div>
+        <div class="box-sub">History + User prefs</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="box small">
+        <div class="box-title">Guardrail</div>
+        <div class="box-sub">Content safety checks</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="box small highlight">
+        <div class="box-title">LangChain Agent</div>
+        <div class="box-sub">Tool-calling, planning</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="box small highlight">
+        <div class="box-title">Groq LLM</div>
+        <div class="box-sub">Llama-3.1-8B (tool-aware)</div>
+      </div>
+    </div>
+
+    <!-- LANE 3: Tools + RAG + FAISS + Corpus -->
+    <div class="section-label">Tools & Retrieval</div>
+    <div class="lane">
+      <div class="cluster">
+        <div class="cluster-title">Tool Calls from Groq LLM</div>
+        <div class="tools-row">
+          <!-- Weather Tool -->
+          <div class="column">
+            <div class="box small tool-box">
+              <div class="box-title">Weather Tool</div>
+              <div class="box-sub">Live city weather</div>
+            </div>
+            <div class="vertical-arrow"></div>
+            <div class="box small">
+              <div class="box-sub">LLM incorporates</div>
+            </div>
+          </div>
+
+          <!-- Routes Tool -->
+          <div class="column">
+            <div class="box small tool-box">
+              <div class="box-title">Routes Tool</div>
+              <div class="box-sub">Multi-modal routes</div>
+            </div>
+            <div class="vertical-arrow"></div>
+            <div class="box small">
+              <div class="box-sub">LLM incorporates</div>
+            </div>
+          </div>
+
+          <!-- RAG Tool + FAISS + Corpus -->
+          <div class="column">
+            <div class="box small tool-box">
+              <div class="box-title">RAG Tool</div>
+              <div class="box-sub">Company docs + packages</div>
+            </div>
+            <div class="vertical-arrow"></div>
+            <div class="box small">
+              <div class="box-title">FAISS Index</div>
+              <div class="box-sub">Vector search</div>
+            </div>
+            <div class="vertical-arrow"></div>
+            <div class="box small">
+              <div class="box-title">Corpus</div>
+              <div class="box-sub">Policies, packages, partners</div>
+            </div>
+            <div class="vertical-arrow"></div>
+            <div class="box small">
+              <div class="box-sub">Context → RAG Tool → LLM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LANE 4: Final Response back to user -->
+    <div class="section-label">Response Flow</div>
+    <div class="lane">
+      <div class="box small highlight">
+        <div class="box-title">Final Response Generator</div>
+        <div class="box-sub">Synthesizes tools + RAG</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="box small">
+        <div class="box-title">FastAPI</div>
+        <div class="box-sub">Returns ChatResponse</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="box small">
+        <div class="box-title">Streamlit UI</div>
+        <div class="box-sub">Renders reply</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="box small">
+        <div class="box-title">User</div>
+        <div class="box-sub">Reads answer / asks next</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

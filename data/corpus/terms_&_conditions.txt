@@ -1,0 +1,101 @@
+TERMS AND CONDITIONS
+====================
+
+1. DEFINITIONS
+--------------
+- "Company" / "We" / "Us":
+  - SkyTrail Journeys Pvt. Ltd.
+- "Customer" / "You":
+  - The person or group making the booking and/or travelling.
+- "Package":
+  - Any combination of services (hotel, flight, transport, activities) sold as a single product.
+- "Vendor" / "Partner":
+  - Airlines, hotels, transport operators, guides, and activity providers booked via the Company.
+
+2. SCOPE OF SERVICE
+-------------------
+- SkyTrail Journeys acts as an intermediary between:
+  - Customers and various service providers (airlines, hotels, etc.).
+- Our responsibility is limited to:
+  - Booking and coordination of services as per the confirmed itinerary.
+- We are not responsible for:
+  - Operational decisions/changes made directly by airlines, hotels, or any third party.
+
+3. ACCEPTANCE OF TERMS
+----------------------
+- By confirming a booking:
+  - You acknowledge that you have read, understood and accepted:
+    - These Terms & Conditions
+    - Cancellation Policy
+    - Refund Policy
+    - Package-specific conditions
+
+4. CUSTOMER RESPONSIBILITIES
+----------------------------
+- Provide accurate personal and contact information.
+- Ensure that all travellers:
+  - Carry valid ID documents and, if applicable, passports/visas.
+- Review itinerary and invoice carefully before making payment.
+- Report any discrepancies immediately.
+- Adhere to:
+  - Check-in times
+  - Reporting times for transfers and tours
+  - Local laws and hotel rules
+
+5. COMPANY RESPONSIBILITIES
+---------------------------
+- Share clear details of:
+  - Inclusions, exclusions, and specific conditions.
+- Coordinate with vendors to:
+  - Confirm bookings as per itinerary.
+- Provide:
+  - Support contact details before travel.
+- Assist, within reasonable limits, in:
+  - Resolving issues caused by vendor changes, where possible.
+
+6. LIMITATION OF LIABILITY
+--------------------------
+- We will not be liable for:
+  - Losses, damages or delays caused by events beyond our reasonable control, including:
+    - Natural calamities
+    - Weather disruptions
+    - Strikes, riots, political unrest
+    - Government restrictions
+    - Technical failures or overbooking by airlines/hotels
+- The maximum liability of SkyTrail Journeys:
+  - Will not exceed the total amount received from the customer for the specific booking in dispute.
+
+7. CHANGES & AMENDMENTS
+-----------------------
+- Post-booking changes requested by the customer:
+  - Are subject to availability and vendor approval.
+  - May incur additional charges (fare difference, amendment fee).
+- The company reserves the right to:
+  - Modify the itinerary due to operational or safety reasons while ensuring overall trip value is maintained.
+
+8. USE OF RAG & AI-BASED SUGGESTIONS (INTERNAL NOTE)
+----------------------------------------------------
+- Our systems may use:
+  - AI and document retrieval to suggest itineraries and options.
+- Final confirmation of:
+  - Prices, availability, and specific inclusions
+  must always be:
+  - Verified on official invoice and booking confirmation.
+
+9. INSURANCE
+------------
+- Travel insurance is strongly recommended but may not be included by default.
+- It is the customer's responsibility to:
+  - Review and understand the insurance coverage terms where purchased.
+
+10. GOVERNING LAW & JURISDICTION
+--------------------------------
+- These terms are governed by the laws of India.
+- Any disputes will be subject to:
+  - The exclusive jurisdiction of competent courts in the city where the Company is registered.
+
+11. CONTACT FOR CLARIFICATIONS
+------------------------------
+- For any clarification regarding these Terms & Conditions, customers may contact:
+  - Email: support@skytrailjourneys.in
+  - Helpline: +91-90XX-XXX-001

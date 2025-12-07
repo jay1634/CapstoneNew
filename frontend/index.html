@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Planner AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        body {
+            background: #0d0d0d;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.02);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .interest-chip {
+            transition: all 0.2s;
+        }
+        .interest-chip.selected {
+            background: white;
+            color: black;
+        }
+        .chat-message {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .scrollable-content {
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+        .scrollable-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .itinerary-panel {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+        }
+        .itinerary-panel.open {
+            transform: translateX(0);
+        }
+        .chat-content p {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+        .chat-content ul, .chat-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .chat-content li {
+            margin-bottom: 0.4rem;
+            line-height: 1.6;
+        }
+        .chat-content h1, .chat-content h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .chat-content h3, .chat-content h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+            margin-bottom: 0.4rem;
+        }
+        .chat-content strong {
+            font-weight: 600;
+        }
+        .itinerary-content p {
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+        }
+        .itinerary-content ul, .itinerary-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .itinerary-content li {
+            margin-bottom: 0.4rem;
+            line-height: 1.7;
+        }
+        .itinerary-content h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: white;
+        }
+        .itinerary-content h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #f0f0f0;
+        }
+        .itinerary-content h3, .itinerary-content h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+            margin-bottom: 0.4rem;
+            color: #e0e0e0;
+        }
+        .itinerary-content strong {
+            font-weight: 600;
+            color: white;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <div class="h-screen w-screen flex">
+        <!-- Left Sidebar -->
+        <div class="w-64 glass-effect flex flex-col">
+            <!-- Header -->
+            <div class="p-4 border-b border-white/10">
+                <h1 class="text-xl font-semibold">Travel Planner AI</h1>
+                <p class="text-xs text-gray-400 mt-1">Plan your perfect trip</p>
+            </div>
+
+            <!-- Preferences -->
+            <div class="flex-1 overflow-y-auto scrollable-content p-4 space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1.5">Destination</label>
+                    <input type="text" id="destination" value="Goa" 
+                        class="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/30 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1.5">Days</label>
+                    <input type="number" id="days" value="3" min="1" max="10"
+                        class="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/30 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1.5">Budget (₹)</label>
+                    <input type="number" id="budget" value="5000" min="100"
+                        class="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/30 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1.5">Interests</label>
+                    <div class="flex flex-wrap gap-1.5" id="interests">
+                        <button class="interest-chip px-2 py-1 rounded text-xs border border-white/20 bg-white/5" data-interest="beach">Beach</button>
+                        <button class="interest-chip selected px-2 py-1 rounded text-xs border border-white/20" data-interest="culture">Culture</button>
+                        <button class="interest-chip px-2 py-1 rounded text-xs border border-white/20 bg-white/5" data-interest="history">History</button>
+                        <button class="interest-chip px-2 py-1 rounded text-xs border border-white/20 bg-white/5" data-interest="shopping">Shopping</button>
+                        <button class="interest-chip px-2 py-1 rounded text-xs border border-white/20 bg-white/5" data-interest="nightlife">Nightlife</button>
+                        <button class="interest-chip selected px-2 py-1 rounded text-xs border border-white/20" data-interest="food">Food</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1.5">Food Preference</label>
+                    <select id="foodPref" class="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/30 transition">
+                        <option value="no preference">No preference</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="non-veg">Non-veg</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1.5">Name</label>
+                    <input type="text" id="userName" value="Traveler" placeholder="Your name"
+                        class="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/30 transition">
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="p-4 border-t border-white/10 space-y-2">
+                <button onclick="generateItinerary()" id="generateBtn"
+                    class="w-full bg-white text-black font-medium py-2 text-sm rounded transition">
+                    ✨ Generate Itinerary
+                </button>
+                <button onclick="toggleItinerary()" id="toggleBtn"
+                    class="w-full bg-white/10 border border-white/20 py-2 text-sm rounded transition">
+                    📄 View Itinerary
+                </button>
+                <button onclick="clearChat()" 
+                    class="w-full bg-white/5 border border-white/20 py-2 text-sm rounded transition">
+                    🔄 Clear Chat
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="flex-1 flex flex-col relative">
+            <!-- Chat Header -->
+            <div class="border-b border-white/10 p-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-base font-medium">Travel Assistant</h2>
+                    <p class="text-xs text-gray-400">Ask me anything about your trip</p>
+                </div>
+                <button onclick="switchToRoutes()" class="px-3 py-1.5 text-sm bg-white/10 rounded hover:bg-white/20 transition">
+                    🗺️ Routes
+                </button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto scrollable-content p-6 space-y-4">
+                <div class="flex justify-center">
+                    <div class="text-center text-gray-400 text-sm max-w-md">
+                        <p class="mb-2">👋 Welcome to Travel Planner AI</p>
+                        <p>Set your preferences in the sidebar and generate an itinerary to get started, or ask me anything about travel!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="border-t border-white/10 p-4">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex gap-3">
+                        <input type="text" id="chatInput" placeholder="Message Travel Assistant..."
+                            class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-white/30 transition"
+                            onkeypress="if(event.key==='Enter') sendMessage()">
+                        <button onclick="sendMessage()" id="sendBtn"
+                            class="bg-white text-black px-6 py-3 rounded-lg font-medium text-sm transition hover:bg-gray-200">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Itinerary Panel (Slideable) -->
+        <div id="itineraryPanel" class="itinerary-panel absolute top-0 right-0 h-full w-96 bg-black border-l border-white/10 flex flex-col z-50">
+            <!-- Panel Header -->
+            <div class="p-4 border-b border-white/10 flex items-center justify-between">
+                <h2 class="text-base font-semibold">Your Itinerary</h2>
+                <button onclick="toggleItinerary()" class="text-gray-400 hover:text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Panel Content -->
+            <div id="itineraryDisplay" class="flex-1 overflow-y-auto scrollable-content p-6 text-sm text-gray-300 itinerary-content">
+                <p class="text-gray-500">Generate an itinerary using the sidebar to view it here.</p>
+            </div>
+        </div>
+
+        <!-- Routes Modal (Hidden by default) -->
+        <div id="routesModal" class="hidden absolute inset-0 bg-black/95 z-50 flex items-center justify-center p-6">
+            <div class="bg-white/5 border border-white/10 rounded-xl w-full max-w-4xl max-h-full overflow-hidden flex flex-col">
+                <!-- Modal Header -->
+                <div class="p-6 border-b border-white/10 flex items-center justify-between">
+                    <h2 class="text-xl font-semibold">🗺️ Route Planner</h2>
+                    <button onclick="closeRoutes()" class="text-gray-400 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal Content -->
+                <div class="p-6 flex-1 overflow-y-auto scrollable-content">
+                    <div class="grid grid-cols-3 gap-3 mb-6">
+                        <input type="text" id="routeOrigin" value="Mumbai" placeholder="From City"
+                            class="bg-white/5 border border-white/10 rounded px-4 py-2 text-sm focus:outline-none focus:border-white/30 transition">
+                        <input type="text" id="routeDestination" value="Goa" placeholder="To City"
+                            class="bg-white/5 border border-white/10 rounded px-4 py-2 text-sm focus:outline-none focus:border-white/30 transition">
+                        <button onclick="findRoutes()" id="routeBtn"
+                            class="bg-white text-black font-medium text-sm rounded transition">
+                            🔎 Find Routes
+                        </button>
+                    </div>
+
+                    <div id="routesDisplay">
+                        <p class="text-gray-500 text-center py-8 text-sm">Enter cities and click "Find Routes" to see travel options.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:8000';
+        let sessionId = generateUUID();
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Interest selection
+        document.querySelectorAll('.interest-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        // Toggle itinerary panel
+        function toggleItinerary() {
+            const panel = document.getElementById('itineraryPanel');
+            panel.classList.toggle('open');
+            const btn = document.getElementById('toggleBtn');
+            btn.textContent = panel.classList.contains('open') ? '✕ Close Itinerary' : '📄 View Itinerary';
+        }
+
+        // Routes modal
+        function switchToRoutes() {
+            document.getElementById('routesModal').classList.remove('hidden');
+        }
+
+        function closeRoutes() {
+            document.getElementById('routesModal').classList.add('hidden');
+        }
+
+        // Show/hide loading
+        function showLoading(buttonId, text = '') {
+            const btn = document.getElementById(buttonId);
+            btn.disabled = true;
+            btn.innerHTML = `<div class="spinner mx-auto"></div>`;
+        }
+
+        function hideLoading(buttonId, text) {
+            const btn = document.getElementById(buttonId);
+            btn.disabled = false;
+            btn.innerHTML = text;
+        }
+
+        // Format text to HTML
+        function formatTextToHTML(text) {
+            text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            text = text.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/^\* (.*$)/gim, '<li>$1</li>');
+            text = text.replace(/^- (.*$)/gim, '<li>$1</li>');
+            text = text.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+            
+            const lines = text.split('\n');
+            let html = '';
+            
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('<h') || line.startsWith('<ul') || line.startsWith('</ul>')) {
+                    html += line + '\n';
+                } else if (line.length > 0 && !line.startsWith('<li>')) {
+                    html += '<p>' + line + '</p>\n';
+                } else if (line.length > 0) {
+                    html += line + '\n';
+                }
+            });
+            
+            return html;
+        }
+
+        // Generate Itinerary
+        async function generateItinerary() {
+            const destination = document.getElementById('destination').value;
+            const days = parseInt(document.getElementById('days').value);
+            const budget = parseFloat(document.getElementById('budget').value);
+            const interests = Array.from(document.querySelectorAll('.interest-chip.selected'))
+                .map(chip => chip.dataset.interest);
+            const foodPref = document.getElementById('foodPref').value;
+
+            showLoading('generateBtn');
+            document.getElementById('itineraryDisplay').innerHTML = '<p class="text-gray-400">Planning your trip...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/generate_itinerary`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        destination: destination,
+                        days: days,
+                        budget: budget,
+                        interests: interests,
+                        food_preferences: foodPref
+                    })
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                const data = await response.json();
+                const formattedHTML = formatTextToHTML(data.itinerary_text || 'No itinerary generated.');
+                document.getElementById('itineraryDisplay').innerHTML = formattedHTML;
+                
+                // Auto-open panel
+                document.getElementById('itineraryPanel').classList.add('open');
+                document.getElementById('toggleBtn').textContent = '✕ Close Itinerary';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('itineraryDisplay').innerHTML = `<p class="text-red-400">❌ Error: ${error.message}</p>`;
+            } finally {
+                hideLoading('generateBtn', '✨ Generate Itinerary');
+            }
+        }
+
+        // Send Chat Message
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            const userName = document.getElementById('userName').value.trim() || 'Traveler';
+            
+            if (!message) return;
+
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Add user message
+            chatMessages.innerHTML += `
+                <div class="chat-message flex justify-end">
+                    <div class="bg-white/10 rounded-2xl rounded-tr-sm px-4 py-3 max-w-2xl">
+                        ${escapeHtml(message)}
+                    </div>
+                </div>
+            `;
+
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Show loading
+            chatMessages.innerHTML += `
+                <div class="chat-message flex justify-start" id="loadingMsg">
+                    <div class="bg-white/5 rounded-2xl rounded-tl-sm px-4 py-3">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        message: message,
+                        name: userName
+                    })
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                const data = await response.json();
+                document.getElementById('loadingMsg').remove();
+                
+                const formattedReply = formatTextToHTML(data.reply);
+                
+                chatMessages.innerHTML += `
+                    <div class="chat-message flex justify-start">
+                        <div class="bg-white/5 rounded-2xl rounded-tl-sm px-4 py-3 max-w-2xl chat-content">
+                            ${formattedReply}
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loadingMsg')?.remove();
+                chatMessages.innerHTML += `
+                    <div class="chat-message flex justify-start">
+                        <div class="bg-red-900/30 rounded-2xl rounded-tl-sm px-4 py-3 max-w-2xl">
+                            ❌ Error: ${escapeHtml(error.message)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Find Routes
+        async function findRoutes() {
+            const origin = document.getElementById('routeOrigin').value;
+            const destination = document.getElementById('routeDestination').value;
+
+            showLoading('routeBtn');
+            document.getElementById('routesDisplay').innerHTML = '<p class="text-gray-400 text-center py-8">Calculating best routes...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/routes`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ origin, destination })
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                const data = await response.json();
+                if (data.error) throw new Error(data.error);
+
+                let routesHTML = `<h4 class="font-semibold mb-4 text-base">🚦 Travel options from <strong>${origin} → ${destination}</strong></h4><div class="space-y-3">`;
+                
+                if (data.recommended) routesHTML += createRouteCard('⭐ Balanced Route', '⭐ BEST', data.recommended);
+                if (data.fastest) routesHTML += createRouteCard('⚡ Fastest Route', '⚡ FASTEST', data.fastest);
+                if (data.cheapest) routesHTML += createRouteCard('💸 Cheapest Route', '💸 CHEAPEST', data.cheapest);
+                
+                routesHTML += '</div>';
+                document.getElementById('routesDisplay').innerHTML = routesHTML;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('routesDisplay').innerHTML = `<p class="text-red-400 text-center py-8">❌ Error: ${error.message}</p>`;
+            } finally {
+                hideLoading('routeBtn', '🔎 Find Routes');
+            }
+        }
+
+        function createRouteCard(title, badge, routeData) {
+            const hours = Math.floor(routeData.total_time_min / 60);
+            const mins = routeData.total_time_min % 60;
+            const distance = routeData.total_distance_km;
+
+            let segmentsHTML = '';
+            routeData.segments.forEach(seg => {
+                segmentsHTML += `
+                    <div class="bg-white/5 p-3 rounded">
+                        <p class="text-sm font-semibold">${seg.mode.toUpperCase()}</p>
+                        <p class="text-xs text-gray-400">${seg.from} → ${seg.to}</p>
+                        <p class="text-xs text-gray-500">📏 ${seg.distance_km} km • ⏱ ${seg.time_min} min</p>
+                    </div>
+                `;
+            });
+
+            return `
+                <details class="bg-white/5 rounded-lg border border-white/10 p-4">
+                    <summary class="cursor-pointer text-sm font-medium">${title} | ⏱ ${hours}h ${mins}m | 📏 ${distance} km | ${badge}</summary>
+                    <div class="mt-3 space-y-2">
+                        ${segmentsHTML}
+                    </div>
+                </details>
+            `;
+        }
+
+        function clearChat() {
+            document.getElementById('chatMessages').innerHTML = `
+                <div class="flex justify-center">
+                    <div class="text-center text-gray-400 text-sm max-w-md">
+                        <p class="mb-2">👋 Welcome to Travel Planner AI</p>
+                        <p>Set your preferences in the sidebar and generate an itinerary to get started, or ask me anything about travel!</p>
+                    </div>
+                </div>
+            `;
+            document.getElementById('chatInput').value = '';
+            sessionId = generateUUID();
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>

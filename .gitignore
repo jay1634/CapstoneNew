@@ -1,0 +1,8 @@
+.env
+*.key
+*.pem
+__pycache__/
+venv/
+.env.local
+.env.production
+backend/config.py

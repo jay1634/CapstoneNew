@@ -1,0 +1,80 @@
+REFUND POLICY
+=============
+
+WHEN REFUNDS ARE APPLICABLE
+---------------------------
+Refunds may be applicable in the following scenarios:
+1. Customer-initiated cancellation (as per applicable Cancellation Policy slabs).
+2. Reduction in services or number of travellers with prior notice.
+3. Over-charging or duplicate payment errors.
+4. Partial refunds from airline/hotel due to schedule changes or operational issues.
+
+REFUND SOURCES
+--------------
+Refunds are processed based on:
+- Amount received from third parties (airlines, hotels, vendors) after deductions.
+- SkyTrail Journeys’ own service fee deductions wherever applicable and communicated.
+
+REFUND AMOUNT CALCULATION
+-------------------------
+Refund Amount = Total Amount Paid  
+                – Cancellation Charges (as per policy)  
+                – Non-refundable components (if any)  
+                – Payment gateway charges (if applicable)  
+
+Refunds will NOT include:
+- Visa fees already paid to consulates/agents.
+- Insurance premiums.
+- Non-refundable activity tickets (theme parks, events, etc.) where mentioned.
+
+REFUND TIMELINE
+---------------
+- Domestic packages:
+  - Typically 7–14 working days from confirmation of cancellation and receipt of all vendor credits.
+- International packages:
+  - 14–21 working days (may be longer if airlines/hotels delay processing).
+- Flight tickets:
+  - As per airline timeline; we initiate within 3–5 working days of receiving airline credit.
+
+The above timelines are indicative and depend on:
+- Banks
+- Payment gateways
+- Processing time of third party vendors
+
+REFUND MODE
+-----------
+Refunds are generally processed via:
+- Original mode of payment (UPI, card, bank transfer), or
+- Bank transfer to the customer’s account, if original mode is unavailable.
+
+WE DO NOT:
+----------
+- Issue cash refunds for online or digital payments.
+- Refund to third-party accounts (must be in the name of primary or authorised traveller).
+
+NON-REFUNDABLE CASES
+--------------------
+No refund is typically possible when:
+- No-show for flights/hotels/activities.
+- Non-refundable hotel or special fare ticket rules apply.
+- Visa is rejected or delayed due to customer-related reasons.
+- Customer fails to provide required documents on time (for visa or bookings).
+- Customer does not use part of the services voluntarily (e.g., skips a day tour).
+
+DISPUTE HANDLING
+----------------
+- In case of any discrepancy between:
+  - Vendor credit note and expected refund
+- SkyTrail Journeys will:
+  - Share vendor communication or screenshots where feasible.
+  - Attempt to resolve with vendor on customer’s behalf.
+
+- Final refunds are subject to:
+  - Actual credit received from third-party partners.
+
+NOTE
+----
+This Refund Policy must be read together with:
+- Cancellation Policy
+- Terms & Conditions
+- Package-specific terms shared at the time of booking.
